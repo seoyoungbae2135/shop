@@ -4,15 +4,16 @@ import com.example.shop.constant.ItemSellStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+
 //20240223-2
 @Entity
 @Setter
 @Getter
 @ToString
-public class Item {
+public class Item extends BaseEntity {
     @Id
     @Column(name="item_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,17 +28,17 @@ public class Item {
     @Column(nullable = false)
     private int stockNumber; //재고수량
 
-    @Lob
+    @Type( type="org.hibernate.type.TextType")
     @Column(nullable = false)
     private String itemDetail; //상품 상세설명
 
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus; //상품판매가능 상태
 
-    @Column
+    /*@Column
     private LocalDateTime regTime; //상품 최초 등록 날짜
     @Column
-    private LocalDateTime updateTime; //상품 수정 날짜
+    private LocalDateTime updateTime; //상품 수정 날짜 20240226-7 수정 */
 }
 
 

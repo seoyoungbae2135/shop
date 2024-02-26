@@ -4,12 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Setter
 @Getter
-public class ItemImg {
+public class ItemImg extends BaseEntity {
     @Id
     @Column(name = "item_img_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,10 +22,10 @@ public class ItemImg {
     @Column
     private String repImgYn;
 
-    @Column
+    /*@Column 20240226-7 수정
     private LocalDateTime regDate;
     @Column
-    private LocalDateTime updateDate;
+    private LocalDateTime updateDate;*/
 
     @ManyToOne
     @JoinColumn(name = "item_id")
