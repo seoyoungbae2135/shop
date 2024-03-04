@@ -1,6 +1,7 @@
 package com.example.shop.repository;
 
 import com.example.shop.constant.ItemSellStatus;
+import com.example.shop.dto.ItemSearchDto;
 import com.example.shop.entity.Item;
 import com.example.shop.entity.QItem;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -9,14 +10,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+
+
+
 
 @SpringBootTest
 @TestPropertySource(locations="classpath:application-test.properties")
@@ -27,6 +34,20 @@ class ItemRepositoryTest {
     //20240223-7
     @PersistenceContext
     EntityManager em;
+
+    /*@Test
+    @DisplayName("관리자 테스트")
+    public void adminMng() {
+        this.createItemList();
+        ItemSearchDto itemSearchDto = new ItemSearchDto();
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Item> items = itemRepository.getAdminItemPage(itemSearchDto, pageable);
+
+        List<Item> itemList = items.getContent();
+        for (Item item : itemList){
+            System.out.println(item);
+        }
+    }*/
 
     @Test
     @DisplayName("querydsl 테스트")
@@ -60,7 +81,7 @@ class ItemRepositoryTest {
         item.setUpdateTime( LocalDateTime.now());
 
         Item saveItem = itemRepository.save( item );
-        System.out.println( saveItem.toString());
+        System.out.println( saveItem. toString());
     }
 
     //20240223-4

@@ -1,46 +1,53 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<!--20240226-->
+<!--20240226 ~ 27-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <div th:fragment="header">
-    <nav class="navbar navbar-expand-lg bg-success navbar-dark" >
+
+    <nav class="navbar navbar-expand-lg bg-success navbar-dark py-3">
         <div class="container-fluid">
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <a class="navbar-brand" href="#">Shop</a>
+            <a class="navbar-brand" href="/">Shop</a>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')"> <!--ADMIN 인가 관리자만 접근가능 20240227-6 -->
                         <a class="nav-link" href="/admin/item/new">상품 등록</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')"> <!--ADMIN 인가-->
                         <a class="nav-link" href="/admin/items">상품 관리</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cart">장바구니</a>
+                    <li class="nav-item" sec:authorize="isAuthenticated()"> <!--USER 인가 회원만 접근가능-->
+                        <a class="nav-link" href="/cart">장바구니</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="orders">구매이력</a>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/orders">구매이력</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="members/login">로그인</a>
+                    <li class="nav-item" sec:authorize="isAnonymous()"> <!--누구나 접근가능-->
+                        <a class="nav-link" href="/members/login">로그인</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
                         <a class="nav-link" href="/members/logout">로그아웃</a>
+                    </li>
+                    <li class="nav-item align-self-center" sec:authorize="isAuthenticated()">
+                        <span class="px-3" sec:authentication="name"></span>
                     </li>
 
                 </ul>
-                <form class="d-flex" role="search">
+                <form class="d-flex" role="search" th:action="@{/}">
                     <input name="searchQuery" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-dark" type="submit">Search</button>
+                    <button class="btn btn-outline-danger" type="submit">Search</button>
                 </form>
             </div>
         </div>
     </nav>
+
 </div>
 
 </html>

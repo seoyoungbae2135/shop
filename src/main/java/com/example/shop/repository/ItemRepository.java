@@ -1,15 +1,25 @@
 package com.example.shop.repository;
 
+import com.example.shop.dto.ItemSearchDto;
 import com.example.shop.entity.Item;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 //20240223
 @Repository
-public interface ItemRepository extends JpaRepository<Item,Long> {
+public interface ItemRepository extends JpaRepository<Item,Long>,
+        QuerydslPredicateExecutor<Item>, ItemRepositoryCustom { //20240227 추가
+
+    Page<Item> findByItemSellStatus(ItemSearchDto itemSearchDto, Pageable pageable); //20240229-6 me 추가
+
+
+
 
     // 상품이름으로 조회
     List<Item> findByItemNm(String itemNm);
