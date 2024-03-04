@@ -2,6 +2,7 @@ package com.example.shop.control;
 //20240228-7
 import com.example.shop.dto.CartDetailDto;
 import com.example.shop.dto.CartItemDto;
+import com.example.shop.dto.CartOrderDto;
 import com.example.shop.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,10 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -52,32 +50,34 @@ public class CartController {
 
     @GetMapping(value = "/cart")
     public String orderHist(Principal principal, Model model) {
-        //장바구니 메뉴 클릭시
-        String email = principal.getName();
+        //장바구니 메뉴 클릭
+        List<CartDetailDto> cartDetailDtos = cartService.getCartList(principal.getName());
+        model.addAttribute("cartItems", cartDetailDtos);
 
-        // 카트 리스트 가져오기
-        List<CartDetailDto> cartList = cartService.getCartList(email);
-
-        // 모델에 카트 리스트 추가
-        model.addAttribute("cartList", cartList);
-
-        // 카트 페이지로 이동
         return "cart/cartList"; // 카트 페이지의 뷰 이름으로 수정
 
     }
 
-    /*@PatchMapping(value = "/cartItem/{cartItemId}")
+    @PatchMapping(value = "/cartItem/{cartItemId}")
     public @ResponseBody ResponseEntity updateCartItem(@PathVariable("cartItemId") Long cartItemId, int count, Principal principal) {
         // 상품 수량 변경
+        cartService.updateCartItemCount(cartItemId, count);
+        return new ResponseEntity<Long>(cartItemId, HttpStatus.OK);
     }
     @DeleteMapping(value = "/cartItem/{cartItemId}")
     public @ResponseBody ResponseEntity deleteCartItem(@PathVariable("cartItemId") Long cartItemId, Principal principal) {
         //장바구니 상품 삭제
+        cartService.deleteCartItem(cartItemId);
+        return new ResponseEntity<Long>(cartItemId, HttpStatus.OK);
     }
 
     @PostMapping(value = "/cart/orders")
     public @ResponseBody ResponseEntity orderCartItem(@RequestBody CartOrderDto cartOrderDto, Principal principal){
         // 장바구니 에서 상품 주문
+        List<CartOrderDto> cartOrderDtoList = cartOrderDto.getCartOrderDtoList();
+
+        Long orderId = cartService.orderCartItem(cartOrderDtoList, principal.getName());
+        return new ResponseEntity<Long>(orderId, HttpStatus.OK);
     }
-}*/
+
 }
